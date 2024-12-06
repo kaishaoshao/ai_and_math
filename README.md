@@ -42,7 +42,6 @@ custom_channels:
   simpleitk: https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud
 ```
 
-
 创建环境
 
 ```bash
@@ -60,4 +59,7 @@ conda deactivate
 
 # 删除环境
 conda env remove -n d2l
+
+# 安装pytorch
+conda install pytorch torchvision cpuonly -c pytorch
 ```
