@@ -2,6 +2,8 @@
 
 动手学习深度学习学习笔记[https://zh-v2.d2l.ai/]
 
+Triton 学习笔记
+
 ## 安装并使用miniconda
 
 miniconda常见语法

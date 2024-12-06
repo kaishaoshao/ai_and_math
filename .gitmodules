@@ -1,0 +1,3 @@
+[submodule "triton/third/triton-samples"]
+	path = triton/third/triton-samples
+	url = https://github.com/kaishaoshao/triton-samples.git
