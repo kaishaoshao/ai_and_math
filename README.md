@@ -62,6 +62,6 @@ conda deactivate
 # 删除环境
 conda env remove -n d2l
 
-# 安装pytorch
-conda install pytorch torchvision cpuonly -c pytorch
+# 安装pytorch (匹配cuda版本)
+conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
 ```
