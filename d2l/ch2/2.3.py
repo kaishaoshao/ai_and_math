@@ -103,3 +103,104 @@ print("\n", torch.abs(u).sum())
 # Frobenius范数满足向量范数的所有性质，它就像是矩阵形向量的L2 范数。
 Frobenius = torch.norm(torch.ones((4,9)))
 print("\n", Frobenius)
+
+# 练习 
+# 1. 证明一个矩阵A的转置的转置是A，即(A⊤ )⊤ = A。
+# 定义一个示例矩阵 A1
+A1 = torch.tensor([[1, 2, 3], [2, 0, 4], [3, 4, 5]])
+# 计算 A1 的转置
+A1_transpose = A1.t()
+# 计算 A1 的转置的转置
+A1_double_transpose = A1_transpose.t()
+
+# 使用 torch.equal 验证 (A1^T)^T 是否等于 A1
+if torch.equal(A1, A1_double_transpose):
+    print("\n(A⊤ )⊤ = A")
+else:
+    print("\n(A⊤ )⊤ ≠ A")
+
+# 2. 给出两个矩阵A和B，证明“它们转置的和”等于“它们和的转置”，即A⊤ + B⊤ = (A + B)⊤ 。
+A = torch.tensor([[1, 2, 3], [4, 5, 6]])
+B = torch.tensor([[7, 8, 9], [6, 5, 4]])
+sum_AB = A + B
+A_T = A.t()
+B_T = B.t()
+sum_A_T_B_T = A_T + B_T
+print("\nA+B :", sum_AB, "\nA_T+B_T", sum_A_T_B_T)
+print("结果: ", torch.equal(sum_AB.t(), sum_A_T_B_T))
+
+# 3. 给定任意方阵A，A + A⊤ 总是对称的吗?为什么?
+A = torch.randn(3, 3)
+# 计算A + A^T
+sysmmetric_matrix = A + A.t()
+is_symmetric = torch.equal(sysmmetric_matrix, sysmmetric_matrix.t())
+print("A:\n", A)
+print("A+A^T: \n", sysmmetric_matrix)
+print("验证是否对称：", is_symmetric)
+
+# 4. 本节中定义了形状(2, 3, 4)的张量X。len(X)的输出结果是什么？
+X = torch.arange(24).reshape(2, 3, 4)
+print("X.sharp:", X.shape)
+print("len(X):", len(X))
+
+# 5. 对于任意形状的张量X,len(X)是否总是对应于X特定轴的长度?这个轴是什么?
+# 对于任意形状的张量 X，len(X) 总是对应于 X 在第一个维度（即轴0）的长度。具体来说：
+# len(X) 返回的是张量 X 在第一个维度上的大小。
+# 如果 X 的形状是 (d_0, d_1, d_2, ..., d_n)，那么 len(X) 返回的是 d_0。
+
+# 6. 运行A/A.sum(axis=1)，看看会发生什么。请分析一下原因？
+A = torch.tensor([[1, 2, 3, 4], 
+                  [5, 6, 7, 8], 
+                  [9, 10, 11, 12]], dtype=torch.float32)
+print("A:\n", A)
+# keepdim=True 保持输出张量的维度不变
+row_sums = A.sum(axis=1, keepdim=True)
+print("每行求和:\n", row_sums)
+result = A / row_sums
+print("A / A.sum(axis=1):\n", result)
+
+# 7. 考虑一个具有形状(2, 3, 4)的张量，在轴0、1、2上的求和输出是什么形状?
+X = torch.randn(2, 3, 4)
+print("X:", X)
+# 在轴0上求和
+sum_axis0 = X.sum(axis=0)
+print("sum_axis0:", sum_axis0)
+print("sum_axis0.shape:", sum_axis0.shape)
+# 在轴1上求和
+sum_axis1 = X.sum(axis=1)
+print("sum_axis1:", sum_axis1)
+print("sum_axis1.shape:", sum_axis1.shape)
+# 在轴2上求和
+sum_axis2 = X.sum(axis=2)
+print("sum_axis2:", sum_axis2)
+print("sum_axis2.shape:", sum_axis2.shape)
+
+# 8. 为linalg.norm函数提供3个或更多轴的张量，并观察其输出。对于任意形状的张量这个函数计算得到什么?
+X = torch.arange(24).reshape(2, 4, 3).float()
+print("X:\n", X)
+# 计算整个张量的L2范数 (默认)
+norm_entire = torch.linalg.norm(X)
+print("\nL2-norm_entire:", norm_entire)
+# 计算张量中轴0的L2范数
+norm_axis0 = torch.linalg.norm(X, axis=0)
+print("\nL2-norm_axis0:", norm_axis0)
+print("\nL2-norm_axis0.shape:", norm_axis0.shape)
+# 计算张量中轴1的L2范数
+norm_axis1 = torch.linalg.norm(X, axis=1)
+print("\nL2-norm_axis1:", norm_axis1)
+print("\nL2-norm_axis1.shape:", norm_axis1.shape)
+# 计算张量中轴2的L2范数
+norm_axis2 = torch.linalg.norm(X, axis=2)
+print("\nL2-norm_axis2:", norm_axis1)
+print("\nL2-norm_axis2.shape:", norm_axis2.shape)
+# 计算多个轴的L2范数 轴0和1
+norm_axis01 = torch.linalg.norm(X, axis=(0, 1))
+print("\nL2-norm_axis01:", norm_axis01)
+print("\nL2-norm_axis01.shape:", norm_axis01.shape)
+# 计算多个轴的L2范数 轴1和2
+norm_axis12 = torch.linalg.norm(X, axis=(1, 2))
+print("\nL2-norm_axis12:", norm_axis12)
+print("\nL2-norm_axis12.shape:", norm_axis12.shape)
+# 计算在所有轴上的L2范数
+norm_all = torch.linalg.norm(X, ord=None)
+print("\nL2-norm_all:", norm_all)
