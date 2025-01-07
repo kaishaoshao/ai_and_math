@@ -1,8 +1,10 @@
 # d2l_ai
 
-深度学习学习笔记 [动手学习深度学习](https://zh-v2.d2l.ai/)
+深度学习学习笔记-d2l      [动手学习深度学习](https://zh-v2.d2l.ai/)
 
-Triton 学习 [Triton中文站](https://triton.hyper.ai/)
+神经网络学习-ai 	         [神经网络](https://victorzhou.com/series/neural-networks-from-scratch/)
+
+Triton 学习-triton               [Triton中文站](https://triton.hyper.ai/)
 
 ## 安装并使用miniconda
 
