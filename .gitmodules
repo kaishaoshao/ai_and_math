@@ -7,3 +7,6 @@
 [submodule "triton/third/FlagGems"]
 	path = triton/third/FlagGems
 	url = https://github.com/kaishaoshao/FlagGems.git
+[submodule "triton/third/Triton-Puzzles-Lite"]
+	path = triton/third/Triton-Puzzles-Lite
+	url = https://github.com/kaishaoshao/Triton-Puzzles-Lite.git
