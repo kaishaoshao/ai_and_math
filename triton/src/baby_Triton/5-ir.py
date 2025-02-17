@@ -1,6 +1,6 @@
 import inspect
 import ast
-from tvm.script.ir_builder import relax as relax_builer, ir as I, IRBuilder as IB
+from tvm.script.ir_builder import  ir as IR, IRBuilder as IB
 
 def jit(target="cpu"):
     assert target in ["cpu", "gpu", "cuda"], "Invalid target"
@@ -32,16 +32,38 @@ class CodeGenerator(ast.NodeVisitor):
         # 初始化时保存传入的AST和目标
         self.fn_ast = fn_ast
         self.target = target
+        self.ib = IB()
+        self.ir_module = None
 
     def code_gen(self):
-        # 生成代码时访问AST
-        self.visit(self.fn_ast)
+        with self.ib:
+            # 生成代码时访问AST
+            self.visit(self.fn_ast)
+        module = self.ib.get()
+        print(module)
 
     def visit(self, node):
         # 访问AST节点时打印节点类型
         print("Visit ---> " + node.__class__.__name__)
         return super().visit(node)
 
+    def visit_Module(self, node: ast.Module):
+        # 如果已经存在一个IR模块，则抛出异常
+        if self.ir_module:
+            raise AssertionError("We should have only one module!")
+        # 创建一个新的IR模块
+        self.ir_module = IR.ir_module()
+        # 在IR模块上下文中访问AST节点
+        with self.ir_module:
+            super().generic_visit(node)
+    
+    def visit_FunctionDef(self, node):
+        # 访问函数定义节点时的处理逻辑（当前为空）
+        pass
+    
+    def generic_visit(self, node: ast.AST):
+        # 处理不支持的AST节点类型时抛出异常
+        raise NotImplementedError(f"Unsupported AST node type: {type(node).__name__}")
 
 
 # 使用@jit装饰器装饰add函数
