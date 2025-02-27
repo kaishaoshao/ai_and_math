@@ -1,0 +1,4 @@
+Log file created at: 2025/02/27 17:44:58
+Running on machine: lepus
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0227 17:44:58.763765 3911968 main.cpp:19] Start test...
