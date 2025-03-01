@@ -57,7 +57,7 @@ class CodeGenerator(ast.NodeVisitor):
         with self.ir_module:
             super().generic_visit(node)
     
-    def visit_FunctionDef(self, node):
+    def visit_FunctionDef(self, node):self
         # 访问函数定义节点时的处理逻辑（当前为空）
         pass
     
