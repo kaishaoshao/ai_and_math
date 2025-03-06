@@ -167,3 +167,5 @@ cython_debug/
 
 # data
 d2l/ch2/data
+
+*INFO*

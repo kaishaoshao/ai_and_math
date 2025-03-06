@@ -25,7 +25,7 @@ echo "  "
 
 # 定义帮助信息
 function show_help() {
-    kaikai()
+    kaikai
     echo "Usage: $0 [options]"
     echo "Options:"
     echo "  -h, --help        Display help message"
@@ -60,6 +60,10 @@ function run_test() {
             ;;
         2)
             echo "Running tests for course 2"
+            build_dir="$SCRIPT_DIR/../build/2-course"
+            echo "Build directory: $build_dir"
+            cmake -B "$build_dir/" -S "$build_dir/../../2.course" && make -C "$build_dir" -j8
+            time "$build_dir"/kaikai_datawhale_course2
             ;;
 
         3)

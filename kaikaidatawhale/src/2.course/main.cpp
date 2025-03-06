@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
   // 初始化Google glog库
   google::InitGoogleLogging("kaikai");
   // 设置日志文件输出目录
-  FLAGS_log_dir = "../1.course/log";
+  FLAGS_log_dir = "../2.course/log";
   // 设置日志同时输出到标准错误
   FLAGS_alsologtostderr = true;
 
