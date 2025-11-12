@@ -1,9 +1,10 @@
 #include "dsp.h"
 
-/// Uniform distribution
-/// @param a lower bound
-/// @param b upper bound
-/// @return a random number
+/// @brief 产生（a,b）区间上均匀分布随机数
+/// @param a 给定区间的下限
+/// @param b 给定区间的上限
+/// @param seed 随机数种子
+/// @return t 均匀分布的随机数
 double uniform(double a, double b, long int *seed) {
     double t;
     *seed = 2045 * (*seed) + 1; // 更新种子：混合同余法迭代
