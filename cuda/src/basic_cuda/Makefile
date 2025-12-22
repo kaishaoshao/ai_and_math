@@ -15,10 +15,10 @@ OPENCL_INCLUDES := $(shell pkg-config --cflags OpenCL 2>/dev/null || echo "")
 # -ldl -lpthread        : 用于动态链接库和多线程支持
 
 # NVCC FLAGS
-NVCC_FLAGS      = -O3 -arch=$(ARCH) -Xcompiler -Wno-error --nodevice-link
-NVCC_DP_FLAS    = -O3 -arch=$(ARCH) -Xcompiler -Wno-error --nodevice-link
-NVCC_PROF_FLAGS = -O3 -arch=$(ARCH) -Xcompiler -Wno-error --nodevice-link -lcupti -lnvToolsExt
-NVCC_EXT_FLAGS  = -O3 -arch=$(ARCH) -Xcompiler -Wno-error --nodevice-link -ldl -lpthread
+NVCC_FLAGS      = -v -O3 -arch=$(ARCH) -Xcompiler -Wno-error --no-device-link
+NVCC_DP_FLAS    = -O3 -arch=$(ARCH) -Xcompiler -Wno-error --no-device-link
+NVCC_PROF_FLAGS = -O3 -arch=$(ARCH) -Xcompiler -Wno-error --no-device-link -lcupti -lnvToolsExt
+NVCC_EXT_FLAGS  = -O3 -arch=$(ARCH) -Xcompiler -Wno-error --no-device-link -ldl -lpthread
 NVCC_PTX_FLAGS  = -std=c++11 -arch=$(ARCH) -Xcompiler -Wno-error --no-device-link
 
 # OpenCL FLAGS
@@ -38,5 +38,8 @@ detect_arch:
 		echo "2. Or manually set architecture in Makefile"; \
 	fi
 
+01-vector-add: 01-vector-add.cu
+	$(NVCC) $(NVCC_FLAGS) -o 01-vector-add.out 01-vector-add.cu 
+
 clean:
-  @echo "Cleaning..."
+	rm -f *.out
