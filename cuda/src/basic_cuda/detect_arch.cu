@@ -11,12 +11,12 @@ int main()
   error = cudaGetDeviceCount(&device);
   if (error != cudaSuccess) {
     fprintf(stderr, "cudaGetDeviceCount failed: %s\n", cudaGetErrorString(error));
-    return -1; 
-  }
+    return -1;
+  }     
 
   if(device > 0) {
     fprintf(stderr, "This   ")
   }
- 
+
   return 0;
 }
