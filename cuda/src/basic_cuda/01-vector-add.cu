@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 // __global__关键字告诉CUDA编译器这个函数在GPU上运行，但可以从CPU代码调用
-__global__ void vector_Add(const float *A, const float *B, float *C, int numElements) 
+__global__ void vector_Add(const float *A, const float *B, float *C, int numElements)
 {
     int i = blockDim.x * blockIdx.x + threadIdx.x; // 为每个线程计算一个唯一的全局索引
 
@@ -32,6 +32,10 @@ int main(void)
     float *d_A = NULL;
     float *d_B = NULL;
     float *d_C = NULL;
+    cudaMalloc((void **)&d_A, size);
+    cudaMalloc((void **)&d_B, size);
+    cudaMalloc((void **)&d_C, size);
+
 
     cudaMemcpy(d_A, h_A, size, cudaMemcpyHostToDevice);
     cudaMemcpy(d_B, h_B, size, cudaMemcpyHostToDevice);
@@ -50,9 +54,18 @@ int main(void)
         fprintf(stderr, "kernel launch failed with error %s\n", cudaGetErrorString(err));
         exit(EXIT_FAILURE);
     }
-    
+
     // Copy result back to host
     cudaMemcpy(h_C, d_C, size, cudaMemcpyDeviceToHost);
+
+    for (int i = 0; i < numElements; i++)
+    {
+      if (fabs(h_A[i] + h_B[i] - h_C[i]) > 1e-5) {
+        fprintf(stderr, "Result verfication failed at element %d!\n", i);
+        exit(EXIT_FAILURE);
+      }
+    }
+
 
     // Free device memory
     cudaFree(d_A);

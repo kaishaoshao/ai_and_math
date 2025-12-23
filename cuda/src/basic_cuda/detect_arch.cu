@@ -11,12 +11,20 @@ int main()
   error = cudaGetDeviceCount(&device);
   if (error != cudaSuccess) {
     fprintf(stderr, "cudaGetDeviceCount failed: %s\n", cudaGetErrorString(error));
-    return -1;
-  }     
+    return 1;
+  }
 
   if(device > 0) {
-    fprintf(stderr, "This   ")
+    fprintf(stderr, "No CUDA devices found\n");
+    return 1;
   }
+
+  error = cudaGetDeviceProperties(&deviceProp, 0);
+  if (error != cudaSuccess) {
+    fprintf(stderr, "cudaGetDeviceProperties failed: %s\n", cudaGetErrorString(error));
+  }
+
+  printf("sm_%d%d\n", DeviceProp.major, deviceProp.minor);
 
   return 0;
 }
