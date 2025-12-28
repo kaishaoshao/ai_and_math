@@ -15,7 +15,7 @@ OPENCL_INCLUDES := $(shell pkg-config --cflags OpenCL 2>/dev/null || echo "")
 # -ldl -lpthread        : 用于动态链接库和多线程支持
 
 # NVCC FLAGS
-NVCC_FLAGS      = -v -O3 -arch=$(ARCH) -Xcompiler -Wno-error --no-device-link
+NVCC_FLAGS      = -O3 -arch=$(ARCH) -Xcompiler -Wno-error --no-device-link
 NVCC_DP_FLAS    = -O3 -arch=$(ARCH) -Xcompiler -Wno-error --no-device-link
 NVCC_PROF_FLAGS = -O3 -arch=$(ARCH) -Xcompiler -Wno-error --no-device-link -lcupti -lnvToolsExt
 NVCC_EXT_FLAGS  = -O3 -arch=$(ARCH) -Xcompiler -Wno-error --no-device-link -ldl -lpthread
@@ -39,7 +39,12 @@ detect_arch:
 	fi
 
 01-vector-add: 01-vector-add.cu
-	$(NVCC) $(NVCC_FLAGS) -o 01-vector-add.out 01-vector-add.cu 
+	$(NVCC) $(NVCC_FLAGS) 01-vector-add.cu -o 01-vector-add.out
+
+01-hemowok: 01-FMA.cu
+	$(NVCC) $(NVCC_FLAGS) 01-FMA.cu -o 01-FMA.out
+
+
 
 clean:
 	rm -f *.out
