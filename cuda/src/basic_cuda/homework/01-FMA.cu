@@ -33,7 +33,7 @@ do {                                               \
 		fprintf(stderr, "CUDA error at %s: %d: %s\n",  \
 			      __FILE__, __LINE__,                    \
 	        cudaGetErrorString(err));                \
-	eixt(EXIT_FAILURE);                              \				
+	exit(EXIT_FAILURE);                              \				
 	}                                                \
 } while (0)
 
@@ -96,7 +96,35 @@ void run_test(int n, int mode) {
 	int blocksPerGrid = (n + threadsPerBlock -1) / threadsPerBlock;
 	CUDA_CHECK(cudaEventRecord(start));
 	GPUfma<<<blocksPerGrid, threadsPerBlock>>>(d_A, d_B, d_C, n);
+	CUDA_CHECK(cudaEventRecord(stop));
+	CUDA_CHECK(cudaEventSynchronize(stop));
+	cudaEventElapsedTime(&t_ker, start, stop);
 
+	if(mode == 0) { // 显式内存模式 D2H
+		// 任务5: 测量D2H
+		CUDA_CHECK(cudaEventRecord(start));
+		CUDA_CHECK(cudaMemcpy(h_C, d_C, size, cudaMemcpyDeviceToHost));
+		CUDA_CHECK(cudaEventSynchronize(stop));
+		CUDA_CHECK(cudaEventElapsedTime(&t_d2h, start, stop));
+		
+		free(h_A);
+		free(h_B);
+		free(h_C);
+
+		CUDA_CHECK(cudaFree(d_A));
+		CUDA_CHECK(cudaFree(d_B));
+		CUDA_CHECK(cudaFree(d_C));
+	}
+	else
+	{ // UM模式数据就在d_C中,只需要同步即可访问
+		CUDA_CHECK(cudaDeviceSynchronize());
+
+		CUDA_CHECK(cudaFree(d_A));
+		CUDA_CHECK(cudaFree(d_B));
+		CUDA_CHECK(cudaFree(d_C));
+	}
+
+	printf("%-10s | %10d | %8.3f | %8.3f | %8.3f | %8.3f\n", mode == 0 ? "EM" : "UM", n, t_h2d, t_ker, t_d2h, t_h2d + t_ker + t_d2h);
 }
 
 int main() {
@@ -106,8 +134,8 @@ int main() {
 
 	for (int i = 0; i < 5; i++)
 	{
-		run_test(size[i], 0); // EM 模式
-		run_test(size[i], 1); // UM 模式
+		run_test(sizes[i], 0); // EM 模式
+		run_test(sizes[i], 1); // UM 模式
 	}
 	
 	return 0;

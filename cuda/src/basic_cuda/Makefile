@@ -26,7 +26,7 @@ OPENCL_FLAGS = -O3 -std=c11
 
 .PHONY: all clean detect_arch ptx-demos
 
-all: detect_arch 01-vector-add
+all: detect_arch 01-vector-add 01-homework
 
 ptx-dems:
 
@@ -41,8 +41,8 @@ detect_arch:
 01-vector-add: 01-vector-add.cu
 	$(NVCC) $(NVCC_FLAGS) 01-vector-add.cu -o 01-vector-add.out
 
-01-hemowok: 01-FMA.cu
-	$(NVCC) $(NVCC_FLAGS) 01-FMA.cu -o 01-FMA.out
+01-homework: ./homework/01-FMA.cu 
+	$(NVCC) $(NVCC_FLAGS) ./homework/01-FMA.cu -o 01-FMA.out
 
 
 
