@@ -1,14 +1,12 @@
 #ifndef __SK_NN_ARENA_H__
 #define __SK_NN_ARENA_H__
 
-#include "sk_nn_config.h"
-#include <cstdint>
-#include <ks_config.h>
+#include "sk_nn.h"
 
 typedef struct
 {
     uint32_t  rows;
-    uint32_t  clos;
+    uint32_t  cols;
     sk_f32   *data;
 }sk_matrix;
 
@@ -34,7 +32,7 @@ sk_matrix* mat_create(sk_arena *arena, uint32_t rows, uint32_t clos);
 /// @brief
 /// @param dst
 /// @param src
-void mat_copy(sk_matrix *dst, sk_matrix *src);
+bool mat_copy(sk_matrix *dst, sk_matrix *src);
 
 
 void mat_clear(sk_matrix *mat);
