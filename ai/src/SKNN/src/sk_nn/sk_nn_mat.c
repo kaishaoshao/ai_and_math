@@ -1,4 +1,4 @@
-#include "sk_nn/sk_nn_arena.h"
+#include "sk_nn.h"
 
 sk_matrix* mat_create(sk_arena *arena, uint32_t rows, uint32_t cols){
   sk_matrix *mat = PUSH_STRUCT(arena, sk_matrix);
