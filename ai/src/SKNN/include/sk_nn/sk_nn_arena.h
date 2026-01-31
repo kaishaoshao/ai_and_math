@@ -59,6 +59,6 @@ sk_b32 mat_relu_add_grad(sk_matrix *out, const sk_matrix *in);
 
 sk_b32 mat_softmax_add_grad(sk_matrix *out, const sk_matrix *softmax_out);
 
-sk_b32 mat_cross_entropy_ad_grad(sk_matrix *out, const sk_matrix *p, const sk_matrix *)
+sk_b32 mat_cross_entropy_ad_grad(sk_matrix *out, const sk_matrix *p, const sk_matrix *);
 
 #endif // __SK_NN_ARENA_H__
