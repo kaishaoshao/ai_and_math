@@ -12,6 +12,7 @@ typedef double   sk_f64;
 typedef int8_t  sk_b8;
 typedef int16_t sk_b16;
 typedef int32_t sk_b32;
+typedef int64_t sk_b64;
 
 typedef uint8_t sk_u8;
 typedef uint16_t sk_u16;
