@@ -3,15 +3,16 @@
 
 #include "sk_nn.h"
 
-typedef struct sk_arena{
-  struct sk_arena* current;
-  struct sk_arena* prev;
+typedef struct sk_memory{
+  struct sk_memory* current;
+  struct sk_memory* prev;
 
   uint64_t  reserve_size;
   uint64_t  commit_size;
 
-} sk_arena;
+} sk_memory;
 
-#define PUSH_STRUCT(sk_arena, T) (T*)arena_push(sk_arena, sizeof(T), FALSE)
+#define PUSH_STRUCT(sk_memory, T) (T*)arena_push(sk_memory, sizeof(T), FALSE)
+
 
 #endif // __SK_NN_ARENA_H__

@@ -13,7 +13,15 @@ typedef struct
 /// @param rows
 /// @param clos
 /// @return
-sk_matrix* mat_create(sk_arena *arena, uint32_t rows, uint32_t clos);
+sk_matrix* mat_create(sk_memory *arena, uint32_t rows, uint32_t clos);
+
+/// @brief 
+/// @param arena 
+/// @param rows 
+/// @param clos 
+/// @param filename 
+/// @return 
+sk_matrix* mat_load(sk_memory *arena, uint32_t rows, uint32_t clos, const char* filename);
 
 /// @brief
 /// @param dst
@@ -81,7 +89,7 @@ sk_b32 mat_cross_entropy(sk_matrix *out, const sk_matrix *p, const sk_matrix *q)
 /// @param out 
 /// @param in 
 /// @return 
-sk_b32 mat_relu_add_grad(sk_matrix *out, const sk_matrix *in);
+sk_b32 mat_relu_add_grad(sk_matrix *out, const sk_matrix *in, const sk_matrix *grad);
 
 /// @brief 
 /// @param out 
@@ -92,8 +100,9 @@ sk_b32 mat_softmax_add_grad(sk_matrix *out, const sk_matrix *softmax_out);
 /// @brief 
 /// @param out 
 /// @param p 
-/// @param q
+/// @param q 
+/// @param grad 
 /// @return 
-sk_b32 mat_cross_entropy_ad_grad(sk_matrix *out, const sk_matrix *p, const sk_matrix *q);
-
+sk_b32 mat_cross_entropy_add_grad(sk_matrix *p_grad, sk_matrix *q_grad, 
+                onst sk_matrix *p, const sk_matrix *q, const sk_matrix *grad);
 #endif // __SK_NN_MAT_H__

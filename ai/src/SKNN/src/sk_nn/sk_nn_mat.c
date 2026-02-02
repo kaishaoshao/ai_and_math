@@ -1,6 +1,6 @@
 #include "sk_nn.h"
 
-sk_matrix* mat_create(sk_arena *arena, uint32_t rows, uint32_t cols){
+sk_matrix* mat_create(sk_memory *arena, uint32_t rows, uint32_t clos) {
   sk_matrix *mat = PUSH_STRUCT(arena, sk_matrix);
 
   mat->rows = rows;
@@ -8,6 +8,23 @@ sk_matrix* mat_create(sk_arena *arena, uint32_t rows, uint32_t cols){
   mat->data = PUSH_ARRAY(arena, sk_f32, (uint64_t)rows * cols);
   return mat;
 }
+
+sk_matrix* mat_load(sk_memory *arena, uint32_t rows, uint32_t cols, const char* filename) {
+	sk_matrix mat = mat_create(arena, rows, cols);;
+
+	FILE *file = fopen(filename, "rb");
+
+	fseek(f, SEEK_END);
+	sk_u64 size = ftell(f);
+	fseek(f, SEEK_SET);
+	
+	size = MIN(size, sizeof(sk_f32) * rows * cols)
+	fread(mat->data, 1, size, f);
+	fclose(f);
+
+	return mat;
+}
+
 
 bool mat_copy(sk_matrix *dst, sk_matrix *src){
   if (dsk->rows != src->rows || dsk->cols != src->cols)
@@ -133,7 +150,7 @@ sk_b32 mat_mul(sk_matrix *out, const sk_matrix *a, const sk_matrix *b
     case 0b00: { _mat_mul_nn(out, a, b); } break;
     case 0b00: { _mat_mul_nt(out, a, b); } break;
     case 0b00: { _mat_mul_tn(out, a, b); } break;
-    case 0b00: { _mat_mul_tt(out, a, b);} break;
+    case 0b00: { _mat_mul_tt(out, a, b); } break;
   default:
     break;
   }
@@ -172,18 +189,68 @@ sk_b32 mat_softmax(sk_matrix *out, const sk_matrix *in){
 
 sk_b32 mat_cross_entropy(sk_matrix *out, const sk_matrix *p,
                          const sk_matrix *q) {
-
+  if(p->rows != q->rows || p->cols != q->cols)
+	  return false;
+	if(out->rows != p->rows || out->cols != p.cols)
+		return false;
+	
+	sk_u64 size  = (sk_u64)out->rows * out->cols;
+	for (sk_u64 i = 0; i < size; i++)
+		out->data[i] = p->data[i] == 0.0f ? 0.0f : p->data[i] * -logf(q->data[i]);
+	return true;
 }
 
-sk_b32 mat_relu_add_grad(sk_matrix *out, const sk_matrix *in) {
+sk_b32 mat_relu_add_grad(sk_matrix *out, const sk_matrix *in, const sk_matrix *grad) {
+	if(out->rows != in->rows || out->cols != in->cols)
+		return false;
+	if (out->rows != in->rows || out->cols != in->cols)
+		return false;
 
+	sk_u64 size = (sk_u64)out->rows * out->cols;
+	for (int i = 0; i < size; i++)
+		out->data[i] += in->data[i] > 0.0f ? grad->data[i] : 0.0f;
+	return true;
 }
 
 sk_b32 mat_softmax_add_grad(sk_matrix *out, const sk_matrix *softmax_out) {
+	if(softmax_out->rows != out->rows || softmax_out->cols != out->cols)		
+	  return false;
+	mem_temp scratch = mem_scratch_get(NULL, 0);
+
+	sk_u32 size = MAX(softmax_out->rows, softmax_out.cols);
+	sk_matrix* temp = mat_create(scratch.mem, size, size);
+
+	for (sk_u32 i = 0; i < size; i++)
+	{
+		for (sk_u32 j = 0; j < size; j++)
+				temp->data[i + j * size] = 
+					softmax_out->data[i] * ((i == j) - softmax_out->data[i]); 
+		
+	}
+	
+	mat_mul(out, temp, grad, 0, 0, 0);
+	mem_scrathch_release(scratch);
 
 }
 
-sk_b32 mat_cross_entropy_ad_grad(sk_matrix *out, const sk_matrix *p, const sk_matrix *) {
+sk_b32 mat_cross_entropy_add_grad(sk_matrix *p_grad, sk_matrix *q_grad, const sk_matrix *p, const sk_matrix *q, const sk_matrix *grad) {
+	if(p->rows != q.rows || p->cols != q.cols)
+	  return false;
+	
+		sk_u64 size = (sk_u64)p->rows * p->cols;
 
+		if(p_grad != NULL) {
+			if(p_grad->rows != p->rows || p_grad->cols != p->cols)
+				return false;
+			for (sk_u64 i = 0; i < size; i++)
+				p_grad->data[i] +- -logf(q->data[i] * grad.data[i])
+				
+		}
+		if(q_grad != NULL) {
+			if(q_grad->rows != q->rows || q_grad->cols != q->cols)
+				return false;
+			for (sk_u64 i = 0; i < size; i++)
+				q_grad->data[i] += -(p->data[i]) /  q->data[i] * grad->data[i];
+		}
+		return true;
 }
-
