@@ -4,8 +4,7 @@ import numpy as np
 def ds_to_numpy(ds):
     images = []
     labels = []
-    for image, label in ds:
-        images.append(image.numpy())
+    for image, label in ds: 
         labels.append(label.numpy())
 
     return np.array(images), np.array(labels)

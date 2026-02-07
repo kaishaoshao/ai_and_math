@@ -5,9 +5,12 @@
 #include <stdint.h>
 #include <inttypes.h>
 
+
 typedef _Float16 sk_f16;
 typedef float    sk_f32;
 typedef double   sk_f64;
+
+typedef _Bool    sk_bool;
 
 typedef int8_t   sk_b8;
 typedef int16_t  sk_b16;
